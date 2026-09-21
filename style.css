@@ -23,7 +23,7 @@
 
 
 body{
-    background-image: url(./Images/43fffc16-847c-49d0-b2ad-4c9bf6c5848f.png); background-size: 110%;
+    background-image: url(Images/43fffc16-847c-49d0-b2ad-4c9bf6c5848f.png); background-size: 110%;
     background-position: center;    background-repeat: no-repeat; background-position: fixed;
 
     margin: 0px;
@@ -118,7 +118,7 @@ footer{
 
 /* THE CASETTE --------------------------------------------------------------------*/
 #Casette{
-    background-image: url(/Images/Pic.png);
+    background-image: url(Images/Pic.png);
     background-size: cover;
     background-position: center;
     
@@ -133,7 +133,7 @@ footer{
     position: absolute;
     top: 100px; width: 70px; height: 70px; scale: 0.825 ;
     border-radius: 50%;
-    background-image: url(/Images/reel.png);
+    background-image: url(Images/reel.png);
     background-size: cover;
 }
 

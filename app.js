@@ -143,7 +143,7 @@ const nextBtn = document.getElementById('next');
 const prevBtn = document.getElementById('previous');
 
 // --- Click sound (plays instantly on press) ---
-const clickSound = new Audio('/Audio/Button_press1.mp3');
+const clickSound = new Audio('Audio/Button_press1.mp3');
 clickSound.volume = 0.4;
 
 function playClickSound() {

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radio Player</title>
+<style>
+  :root{
+    --ink:#1c1a17;
+    --paper:#f4efe4;
+    --wood:#3a2a1e;
+    --wood-light:#5a4230;
+    --brass:#c98a3f;
+    --brass-light:#e3ac5f;
+    --groove:#2a1f17;
+    --muted:#8a8072;
+    --row-hover:rgba(255,255,255,0.05);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:#e9e2d3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:24px;
+  }
+
+  .player{
+    width:360px;
+    background:var(--wood);
+    background-image:linear-gradient(180deg, var(--wood-light) 0%, var(--wood) 12%);
+    border-radius:14px;
+    padding:22px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  .brand{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+  }
+  .brand-name{
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--brass-light);
+    font-weight:600;
+  }
+  .brand-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:#4a4a4a;
+    box-shadow:0 0 0 2px rgba(0,0,0,0.3) inset;
+  }
+  .brand-dot.live{ background:#e35555; box-shadow:0 0 6px #e35555; }
+
+  .stage{
+    background:var(--groove);
+    border-radius:10px;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:inset 0 2px 8px rgba(0,0,0,0.5);
+    margin-bottom:14px;
+  }
+
+  .disc{
+    width:120px;height:120px;
+    border-radius:50%;
+    background:repeating-radial-gradient(circle at center, #111 0px, #111 2px, #1b1b1b 3px, #1b1b1b 4px);
+    box-shadow:0 4px 14px rgba(0,0,0,0.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation:spin 6s linear infinite;
+    animation-play-state:paused;
+  }
+  .disc.spinning{animation-play-state:running;}
+  .disc-label{
+    width:46px;height:46px;border-radius:50%;
+    background:var(--brass);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 2px var(--groove), inset 0 2px 4px rgba(0,0,0,0.25);
+  }
+  .disc-hole{ width:6px;height:6px;border-radius:50%;background:var(--groove); }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .meta{ text-align:center; margin-bottom:14px; }
+  .meta-title{
+    color:var(--paper); font-size:15px; font-weight:600; margin:0 0 3px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .meta-status{ color:var(--muted); font-size:12px; margin:0; }
+
+  .scrubber{ display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  .time{ font-size:10px; color:var(--muted); min-width:30px; font-variant-numeric:tabular-nums; }
+  .time.end{ text-align:right; }
+  .track{ flex:1; height:4px; background:rgba(255,255,255,0.12); border-radius:2px; position:relative; cursor:pointer; }
+  .track-fill{ position:absolute; left:0; top:0; bottom:0; width:0%; background:var(--brass); border-radius:2px; }
+  .track-thumb{
+    position:absolute; top:50%; width:11px; height:11px; border-radius:50%;
+    background:var(--brass-light); transform:translate(-50%,-50%); left:0%;
+    box-shadow:0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  .controls{ display:flex; align-items:center; justify-content:center; gap:20px; margin-bottom:16px; }
+  .ctrl-btn{
+    background:none; border:none; color:var(--paper); cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center; opacity:0.85;
+  }
+  .ctrl-btn:hover{ opacity:1; }
+  .play-btn{
+    width:44px; height:44px; border-radius:50%; background:var(--brass);
+    box-shadow:0 3px 8px rgba(0,0,0,0.4);
+  }
+  .play-btn:hover{ background:var(--brass-light); }
+  .play-btn svg{ fill:var(--groove); }
+
+  .queue{
+    border-top:0.5px solid rgba(255,255,255,0.1);
+    padding-top:10px;
+    max-height:168px;
+    overflow-y:auto;
+  }
+  .queue-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:7px 6px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .queue-row:hover{ background:var(--row-hover); }
+  .queue-row.active .qr-title{ color:var(--brass-light); }
+  .qr-index{
+    font-size:11px; color:var(--muted); width:16px; text-align:center;
+    font-variant-numeric:tabular-nums;
+  }
+  .queue-row.active .qr-index{ color:var(--brass-light); }
+  .qr-icon{ width:16px; display:flex; align-items:center; justify-content:center; color:var(--brass-light); }
+  .qr-title{
+    flex:1; font-size:13px; color:var(--paper); white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis;
+  }
+  .qr-dur{ font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums; }
+
+  .queue::-webkit-scrollbar{ width:5px; }
+  .queue::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.15); border-radius:3px; }
+
+  #yt-player-host{ position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; }
+</style>
+</head>
+<body>
+
+<div class="player">
+  <div class="brand">
+    <span class="brand-name">On the radio</span>
+    <span class="brand-dot" id="liveDot"></span>
+  </div>
+
+  <div class="stage">
+    <div class="disc" id="disc">
+      <div class="disc-label"><div class="disc-hole"></div></div>
+    </div>
+  </div>
+
+  <div class="meta">
+    <p class="meta-title" id="trackTitle">Loading playlist…</p>
+    <p class="meta-status" id="trackStatus">Connecting</p>
+  </div>
+
+  <div class="scrubber">
+    <span class="time" id="timeCurrent">0:00</span>
+    <div class="track" id="track">
+      <div class="track-fill" id="trackFill"></div>
+      <div class="track-thumb" id="trackThumb"></div>
+    </div>
+    <span class="time end" id="timeDuration">0:00</span>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" id="prevBtn" aria-label="Previous track">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+    </button>
+    <button class="ctrl-btn play-btn" id="playBtn" aria-label="Play">
+      <svg id="playIcon" width="17" height="17" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="pauseIcon" width="17" height="17" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+    </button>
+    <button class="ctrl-btn" id="nextBtn" aria-label="Next track">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="transform:scaleX(-1)"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+    </button>
+  </div>
+
+  <div class="queue" id="queue"></div>
+
+  <div id="yt-player-host"></div>
+</div>
+
+<script>
+  var PLAYLIST = [
+    { id: "rW57Ner6Jf0", title: "Track 1" },
+    { id: "O0Cw1SLdxxE", title: "Track 2" },
+    { id: "Gx_Rqsq1DIw", title: "Track 3" }
+  ];
+
+  var player, isReady = false, isPlaying = false, duration = 0, seeking = false;
+  var currentIndex = 0;
+
+  var playBtn = document.getElementById('playBtn');
+  var playIcon = document.getElementById('playIcon');
+  var pauseIcon = document.getElementById('pauseIcon');
+  var disc = document.getElementById('disc');
+  var trackTitle = document.getElementById('trackTitle');
+  var trackStatus = document.getElementById('trackStatus');
+  var liveDot = document.getElementById('liveDot');
+  var timeCurrent = document.getElementById('timeCurrent');
+  var timeDuration = document.getElementById('timeDuration');
+  var trackFill = document.getElementById('trackFill');
+  var trackThumb = document.getElementById('trackThumb');
+  var trackBar = document.getElementById('track');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var queueEl = document.getElementById('queue');
+
+  function fmt(sec){
+    sec = Math.max(0, Math.floor(sec));
+    var m = Math.floor(sec/60);
+    var s = sec%60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function renderQueue(){
+    queueEl.innerHTML = '';
+    PLAYLIST.forEach(function(t, i){
+      var row = document.createElement('div');
+      row.className = 'queue-row' + (i === currentIndex ? ' active' : '');
+      row.innerHTML =
+        '<span class="qr-index">' + (i+1) + '</span>' +
+        '<span class="qr-icon">' + (i === currentIndex && isPlaying ?
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>' :
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>') +
+        '</span>' +
+        '<span class="qr-title">' + t.title + '</span>' +
+        '<span class="qr-dur">' + (t.dur ? fmt(t.dur) : '--:--') + '</span>';
+      row.addEventListener('click', function(){ loadTrack(i, true); });
+      queueEl.appendChild(row);
+    });
+  }
+
+  function loadTrack(i, autoplay){
+    currentIndex = (i + PLAYLIST.length) % PLAYLIST.length;
+    trackStatus.textContent = 'Loading';
+    if (isReady){
+      if (autoplay){ player.loadVideoById(PLAYLIST[currentIndex].id); }
+      else { player.cueVideoById(PLAYLIST[currentIndex].id); }
+    }
+    renderQueue();
+  }
+
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+
+  window.onYouTubeIframeAPIReady = function(){
+    player = new YT.Player('yt-player-host', {
+      height: '1',
+      width: '1',
+      videoId: PLAYLIST[currentIndex].id,
+      playerVars: { playsinline: 1, controls: 0, rel: 0 },
+      events: {
+        onReady: onPlayerReady,
+        onStateChange: onPlayerStateChange
+      }
+    });
+  };
+
+  function onPlayerReady(){
+    isReady = true;
+    updateNowPlaying();
+    player.setVolume(80);
+    renderQueue();
+    tick();
+  }
+
+  function updateNowPlaying(){
+    duration = player.getDuration() || 0;
+    var data = player.getVideoData();
+    var title = (data && data.title) ? data.title : PLAYLIST[currentIndex].title;
+    trackTitle.textContent = title;
+    PLAYLIST[currentIndex].title = title;
+    timeDuration.textContent = fmt(duration);
+  }
+
+  function onPlayerStateChange(e){
+    if (e.data === YT.PlayerState.PLAYING){
+      isPlaying = true;
+      playIcon.style.display = 'none';
+      pauseIcon.style.display = 'block';
+      disc.classList.add('spinning');
+      liveDot.classList.add('live');
+      trackStatus.textContent = 'Playing';
+      updateNowPlaying();
+      renderQueue();
+    } else if (e.data === YT.PlayerState.PAUSED){
+      isPlaying = false;
+      playIcon.style.display = 'block';
+      pauseIcon.style.display = 'none';
+      disc.classList.remove('spinning');
+      liveDot.classList.remove('live');
+      trackStatus.textContent = 'Paused';
+      renderQueue();
+    } else if (e.data === YT.PlayerState.ENDED){
+      loadTrack(currentIndex + 1, true);
+    }
+  }
+
+  function tick(){
+    if (isReady && !seeking && isPlaying){
+      var cur = player.getCurrentTime ? player.getCurrentTime() : 0;
+      duration = player.getDuration() || duration;
+      var pct = duration ? (cur/duration)*100 : 0;
+      trackFill.style.width = pct + '%';
+      trackThumb.style.left = pct + '%';
+      timeCurrent.textContent = fmt(cur);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  playBtn.addEventListener('click', function(){
+    if (!isReady) return;
+    if (isPlaying){ player.pauseVideo(); }
+    else { player.playVideo(); }
+  });
+
+  prevBtn.addEventListener('click', function(){ loadTrack(currentIndex - 1, true); });
+  nextBtn.addEventListener('click', function(){ loadTrack(currentIndex + 1, true); });
+
+  function seekFromEvent(e){
+    var rect = trackBar.getBoundingClientRect();
+    var x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    var pct = Math.min(1, Math.max(0, x / rect.width));
+    trackFill.style.width = (pct*100) + '%';
+    trackThumb.style.left = (pct*100) + '%';
+    if (isReady && duration){ player.seekTo(pct * duration, true); }
+  }
+
+  trackBar.addEventListener('mousedown', function(e){
+    seeking = true;
+    seekFromEvent(e);
+    function onMove(ev){ seekFromEvent(ev); }
+    function onUp(){
+      seeking = false;
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    }
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  });
+  trackBar.addEventListener('touchstart', function(e){ seeking = true; seekFromEvent(e); });
+  trackBar.addEventListener('touchmove', seekFromEvent);
+  trackBar.addEventListener('touchend', function(){ seeking = false; });
+</script>
+
+</body>
+</html>

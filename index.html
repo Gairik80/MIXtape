@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&family=Yatra+One&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://kit.fontawesome.com/4963442c66.js" crossorigin="anonymous"></script>
+    
+  </head>
+  
+  <body>
+    
+    <header class="Z2">
+      <div class="place-time Container" style="min-height: fit-content;">
+        <span id="clock">--:--:--</span>
+        <span class="place-label">Kolkata, India</span>
+      </div>
+    </header>
+    
+    <main class="Z2">
+      <div class="Heading">
+        <h1>mix-टेप</h1>
+      </div>
+
+    <input type="file" id="folderInput" webkitdirectory multiple hidden>
+    <button id="chooseFolderBtn">upload folder</button>
+      
+    <div class="music-player"> 
+      <div id="PlayerMain" class="Z2">
+        
+      <div class="Container text" > 
+        <h3>Now Playing: <br> Your Favourite Songs! </h3>
+        
+        <div class="now-playing" id="nowPlaying">
+          <!-- <ul id="playlist"></ul> -->
+          <audio id="player" controls></audio>
+        </div>
+      </div>  
+      
+      <div id="Casette" class="Container">
+        <div class="reel reel-left"></div>
+        <div class="reel reel-right"></div>
+        
+        <div class="Buttons">
+          <button id="previous"><i class="fa-solid fa-backward"></i></button>
+          <button id="play"><i class="fa-solid fa-play"></i></button>
+          <button id="pause"><i class="fa-solid fa-pause"></i></button>
+          <button id="next"><i class="fa-solid fa-forward"></i></button>
+        </div>
+
+      </div>
+
+      <div class="Volume">
+          <div class="volume-control">
+            Volume 
+          <span class="volume-icon" id="volumeIcon"></span>
+          -<input type="range" id="volumeSlider" min="0" max="100" value="70" style="transform: translateY(1.5px);">+
+          </div>
+
+        </div>
+        <div class="extra-controls">
+          <button id="shuffleBtn"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+        </div>  
+      </div>
+    </div>
+     
+    <!-- Toggle button -->
+    <button id="playlistToggle" class="playlist-toggle">☰ Playlist</button>
+
+    <!-- Sidebar -->
+    <aside id="playlistSidebar" class="playlist-sidebar">
+      <div class="sidebar-header">
+        <h3>Your Tracks</h3>
+        <button id="closeSidebar" class="close-btn">✕</button>
+      </div>
+      <ul id="sidebarplaylist" class="playlist-list"></ul>
+    </aside>
+
+    <!-- Optional dark overlay behind sidebar -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+
+
+    </main>
+    
+    <!-- <footer class="Z2">
+      <div class="Socials">  
+        <a href="https://www.instagram.com/wandering_ech0/" target="_blank">- Instagram -</a>
+        
+        <a href="">- Mail -</a>
+      </div>
+    </footer> -->
+    
+    <script src="app.js"></script>
+  
+  </body>
+  </html>
+
+
+
+
+
+  

@@ -1,0 +1,431 @@
+::-webkit-scrollbar{width: 0;}
+
+@keyframes float {
+  0%   {  transform: translateY(2px)  rotate(0deg);    }
+  25%  {  transform: translateY(-8px) rotate(0.5deg);  }
+  50%  {  transform: translateY(2px) rotate(0deg);  }
+  75%  {  transform: translateY(-8px) rotate(-0.5deg);  }
+  100% {  transform: translateY(2px)  rotate(0deg);    }
+}
+
+@keyframes spin1 {
+    from { transform: rotate(0deg);   }
+    to   { transform: rotate(360deg); }
+}
+
+@keyframes spin2 {
+    from { transform: rotate(-90deg);   }
+    to   { transform: rotate(270deg);   } 
+}
+
+
+
+
+
+body{
+    background-image: url(./Images/43fffc16-847c-49d0-b2ad-4c9bf6c5848f.png); background-size: 110%;
+    background-position: center;    background-repeat: no-repeat; background-position: fixed;
+
+    margin: 0px;
+    color: antiquewhite;
+    font-family: 'Work Sans', sans-serif;
+    text-align: center;
+
+    display: flex;    flex-direction: column;    align-items: center;
+}
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.15) 20%,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0) 65%,
+    rgba(0, 0, 0, 0.15) 80%,
+    rgba(0, 0, 0, 0.6) 100% 
+  );
+}
+
+h1{ margin: 2.5svh; margin-top: 7.5svh; }
+h3{ font-size: 1.5rem; }
+
+header{
+    position: absolute;
+    top: 40px;    left: 2.5%;
+    text-align: center;
+}
+main{
+    display: flex; flex-direction: column; align-items: center;
+}
+footer{
+    position: fixed;
+    bottom: 0;    left: 0;
+    
+    width: 100%;
+    display: flex;    justify-content: center;
+    gap: 40px;
+}
+
+/* THE PLACE TIME ------------------------------------------------------------------ */
+.place-time {
+    font-family: 'Courier New';    font-size: 14px;    letter-spacing: 1px;
+    color: antiquewhite;
+    text-align: center;
+    display: flex;    flex-direction: column;   gap: 2px;
+}
+
+.place-label {
+    font-size: 12.5px;
+    opacity: 0.75;
+    text-transform: uppercase;    letter-spacing: 2px;
+}
+
+
+/* THE HEADING TEXT ---------------------------------------------------------------*/
+.Heading{
+    font-family: 'Yatra One', cursive;    font-size: 5.25rem;
+    text-shadow: 0px 0px 15px rgba( 255, 255, 255, 0.5);
+    
+    backdrop-filter: blur(0.75px);
+}
+
+.Container{
+    width: fit-content;
+    min-height: 20dvh;
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+}
+.Z2{z-index: 2;}
+
+
+/* THE MAIN CONTAINER -------------------------------------------------------------*/
+#PlayerMain{
+    margin: 1.5rem;
+    width: min(max-content, 10vw);
+    
+    display: flex;    flex-flow: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.text{
+    margin: 25px; padding-block: 25px; width: 17.5rem; border-block: 10px solid; border-radius: 5px;
+}
+
+
+/* THE CASETTE --------------------------------------------------------------------*/
+#Casette{
+    background-image: url(/Images/Pic.png);
+    background-size: cover;
+    background-position: center;
+    
+    height: 300px;    width: 462px;
+    box-shadow: 0px 0px 25px rgba( 0, 0, 0, 1);
+    
+    animation: float 7.5s ease-in-out infinite;
+
+    position: relative;
+}
+.reel{
+    position: absolute;
+    top: 100px; width: 70px; height: 70px; scale: 0.825 ;
+    border-radius: 50%;
+    background-image: url(/Images/reel.png);
+    background-size: cover;
+}
+
+.reel-left  { left: 98px;   animation: spin1 2s linear infinite;}
+.reel-right { right: 98px;  animation: spin2 2s linear infinite;}
+
+/* THE BUTTONS --------------------------------------------------------------------*/
+.Buttons{
+    background-color:#f12829;
+    border: 2.5px solid #f12829; border-radius: 5px;
+    width:375.75px; height: 47.5px;
+    position: relative;
+    top: 40px; left:42.75px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center; gap: 10px;
+}
+button{
+    background-color: antiquewhite;
+    border-width: 2.5px; border-radius: 5px; border-color: antiquewhite;
+    
+    aspect-ratio: 1;
+    
+    color: black;
+    font-size: 1.5rem;    
+}
+button:hover{    border-color: black;}
+
+.extra-controls{ position: absolute; left: 50%; top: 70%; padding: 0.5rem; transform: translateX(-17.5dvw); }
+#shuffleBtn{
+    background-color: transparent;    color: antiquewhite;  
+    border: 2px solid transparent;
+    backdrop-filter: blur(25px);
+
+    width: 5dvw; height: 5dvh;
+    padding-inline: 1rem;
+
+    transition: 0.25s;
+} 
+#shuffleBtn.active{
+  background-color: antiquewhite; color: #000;
+  border: 2px solid rgba( 255, 255, 255, 0.5);
+}
+
+/* YOUTUBE PLAYER WINDOW ----------------------------------------------------------*/
+.YouTubePlayer{
+    margin: 20px;    padding: 0.5rem;
+    background-color: antiquewhite; border-radius: 0.25rem;
+    width: 15svh;    height: 30svh;
+}
+#youtube-player {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* THE HYPERLINKS -----------------------------------------------------------------*/
+.Socials{
+    backdrop-filter: blur(2.5px);
+    padding: 1.25rem;
+    width: 100dvw;
+    
+    display: flex;
+    justify-content: center;
+    gap: 25rem;
+}
+a{
+    font-size: 15px; font-style: italic;
+    text-decoration: none;
+    color: antiquewhite;
+
+    transition: 0.5s;
+}
+a:hover{    color: #f12829;}
+
+
+/* MUSIC PLAYER -------------------------------------------------------------------*/
+.now-playing {
+    margin: 12.5%;  max-height: 7.5dvh; overflow: hidden;
+    font-size: 1.2rem; font-style: italic;
+    text-align: left;
+}
+
+#player {  width: 0; scale: 0;}
+
+/* CHOOSE FOLDER ------------------------------------------------------------------*/
+#chooseFolderBtn{
+    height: 50px; width: 200px;
+    background: transparent;
+    border: 2px solid rgba( 255, 255, 255, 0.5); backdrop-filter: blur(25px);
+
+    font-family: 'Space-Mono', monospace; font-size: 1rem; color:rgba( 255, 255, 255, 0.5);
+    cursor: pointer;
+    padding-inline: 1rem;
+}
+#chooseFolderBtn:hover{
+    background-color: antiquewhite; color: #222;
+    transition: 0.25s;
+}
+
+
+/* #playlist {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 12px;
+}
+
+#playlist li {
+  padding: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #222;
+}
+
+#playlist li:hover {
+  background: #1a1a1a;
+} */
+
+/* SIDEBAR ------------------------------------------------------------------------*/
+.playlist-toggle {
+  position: fixed;
+  top: 2.5dvh;  right: 2.5dvw;
+  z-index: 20;
+
+  background: transparent; backdrop-filter: blur(25px);
+  color: antiquewhite;
+  letter-spacing: 1px; font-size: 1rem; font-weight: 600;
+  
+  height: 50px; width: 200px;
+  border: 2px solid transparent;  border-radius: 2.5px;
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+.playlist-toggle:hover{ border: 2px solid antiquewhite; } 
+
+.playlist-sidebar {
+  position: fixed;
+  top: 0;
+  right: -320px; /* hidden off-screen by default */
+  width: 300px;  height: 100vh;
+  background: rgba(250, 235, 215, 0.25); backdrop-filter: blur(25px);
+  border-left: 2px solid antiquewhite;
+  z-index: 30;
+  transition: right 0.25s ease-out;
+  display: flex;  flex-direction: column;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.playlist-sidebar.open { right: 0;}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid antiquewhite;
+  padding-bottom: 12px;
+}
+
+.sidebar-header h3 {
+  color: antiquewhite;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;  border: none;
+  color: antiquewhite;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.playlist-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.playlist-list li {
+  padding: 12px 10px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+
+  color: antiquewhite;
+  font-family: 'Space-Mono', monospace; font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  /* transition: background 0.2s ease; */
+  transition: 0.4s ease-out;
+  white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;
+}
+
+.playlist-list li:hover {
+  background: rgba(0, 0, 0, 0.15);
+  transform: translateX(50px) scale(1.05);
+}
+
+.playlist-list li.active {
+  background: antiquewhite;  color: black;
+  font-family: inherit; font-weight: bold; font-size: 1rem;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 25;
+}
+
+.sidebar-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* Volume Bar ---------------------------------------------------------------------*/
+.Volume{
+  position: absolute;
+  left: 50%; top: 70%; 
+
+  box-shadow: 0px 0px 20px rgba( 0, 0, 0, 0.25);
+  backdrop-filter: blur(25px);
+
+  padding: 1.5rem; padding-inline: 2rem;
+  
+  border-radius: 0.25rem;
+  /* transform: rotate(-90deg);   */
+}
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.volume-icon { 
+  opacity: 0; scale:0;
+  cursor: pointer;
+  font-size: 1rem;
+  user-select: none;
+}
+
+#volumeSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #000;
+  
+  width: 150px;  height: 2.5px;
+  border-radius: 4px;
+
+  outline: none;
+  cursor: pointer;
+
+  transition: 0.5s ease;
+}
+
+/* Thumb - Chrome/Safari/Edge */
+#volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: antiquewhite;
+  /* border: 1px solid antiquewhite; */
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+#volumeSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Thumb - Firefox */
+#volumeSlider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #222;
+  border: 2px solid #222;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+#volumeSlider:hover{ height: 5px; }
+#volumeSlider::-moz-range-thumb:hover { transform: scale(1.5); }

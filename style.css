@@ -95,7 +95,7 @@ footer{
 
 .Container{
     width: fit-content;
-    min-height: 20dvh;
+    min-height: 20svh;
     border-radius: 14px;
     backdrop-filter: blur(10px);
 }
@@ -105,7 +105,7 @@ footer{
 /* THE MAIN CONTAINER -------------------------------------------------------------*/
 #PlayerMain{
     margin: 1.5rem;
-    width: min(max-content, 10vw);
+    width: min(max-content, 10svw);
     
     display: flex;    flex-flow: row;
     justify-content: space-around;

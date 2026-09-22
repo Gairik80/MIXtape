@@ -58,11 +58,11 @@ document.addEventListener('mousemove', (e) => {
 
 function animateBackground() {
   // smooth easing toward the target position
-  currentX += (targetX - currentX) * 0.05;
-  currentY += (targetY - currentY) * 0.05;
+  currentX += (targetX - currentX) * 0.025;
+  currentY += (targetY - currentY) * 0.025;
 
-  const moveX = currentX * 15; // max shift in px — tweak strength here
-  const moveY = currentY * 15;
+  const moveX = currentX * 7.5; // max shift in px — tweak strength here
+  const moveY = currentY * 7.5;
 
   body.style.backgroundPosition = `calc(50% + ${moveX}px) calc(50% + ${moveY}px)`;
 

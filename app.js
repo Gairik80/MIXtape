@@ -1,3 +1,10 @@
+window.addEventListener('load', () => {
+  const loadingScreen = document.getElementById('loadingScreen');
+  setTimeout(() => {
+    loadingScreen.classList.add('hidden');
+  }, 1200); // small delay so it doesn't feel instant/jarring
+});
+
 // --- Place time ---
 function updateClock() {
   const clockEl = document.getElementById('clock');
@@ -64,8 +71,148 @@ function animateBackground() {
 
 animateBackground();
 
-// MUSIC FOLDER PLAYER JS -------------------------------------------------------------
 
+// --- SOURCE MODE -----------------------------------------------------------------
+let sourceMode = 'local'; // 'local' or 'youtube'
+let ytPlayer = null;
+let ytReady = false;
+
+const modeLocalBtn = document.getElementById('modeLocal');
+const modeYouTubeBtn = document.getElementById('modeYouTube');
+
+modeLocalBtn.addEventListener('click', () => setMode('local'));
+modeYouTubeBtn.addEventListener('click', () => setMode('youtube'));
+
+function setMode(mode) {
+  sourceMode = mode;
+  modeLocalBtn.classList.toggle('active', mode === 'local');
+  modeYouTubeBtn.classList.toggle('active', mode === 'youtube');
+
+  // pause whichever was playing before switching
+  player.pause();
+  if (ytPlayer && ytReady) ytPlayer.pauseVideo();
+
+  if (mode === 'youtube' && !ytPlayer) {
+    loadYouTubeAPI();
+  }
+}
+
+// --- YOUTUBE SETUP ---
+function loadYouTubeAPI(playlistId) {
+  const tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.body.appendChild(tag);
+
+  window.onYouTubeIframeAPIReady = function () {
+    ytPlayer = new YT.Player('youtube-player', {
+      height: '1',
+      width: '1',
+      playerVars: {
+        listType: 'playlist',
+        list: playlistId
+      },
+      events: {
+        onReady: () => { ytReady = true; },
+        onStateChange: onYTStateChange,
+        onError: onYTError
+      }
+    });
+  };
+}
+
+async function fetchYouTubePlaylist(playlistId) {
+  let allItems = [];
+  let nextPageToken = '';
+
+  do {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&pageToken=${nextPageToken}&key=${YT_API_KEY}`
+    );
+    const data = await res.json();
+    allItems = allItems.concat(data.items);
+    nextPageToken = data.nextPageToken || '';
+  } while (nextPageToken);
+
+  ytVideos = allItems.map(item => ({
+    videoId: item.snippet.resourceId.videoId,
+    title: item.snippet.title
+  }));
+
+  renderYouTubePlaylist();
+}
+
+function onYTError(event) {
+  console.log('YouTube playback error code:', event.data);
+  nextBtn.click();
+}
+
+function onYTStateChange(event) {
+  const reels = document.querySelectorAll('.reel');
+  if (event.data === YT.PlayerState.PLAYING) {
+    reels.forEach(r => r.style.animationPlayState = 'running');
+    setActiveButton(playBtn);
+    nowPlaying.textContent = ytPlayer.getVideoData().title;
+  } else if (event.data === YT.PlayerState.PAUSED) {
+    reels.forEach(r => r.style.animationPlayState = 'paused');
+    setActiveButton(pauseBtn);
+  }
+}
+
+
+
+
+const ytLinkInput = document.getElementById('ytLinkInput');
+const ytPlaylistUrlInput = document.getElementById('ytPlaylistUrl');
+const loadYtPlaylistBtn = document.getElementById('loadYtPlaylistBtn');
+
+function setMode(mode) {
+  sourceMode = mode;
+  modeLocalBtn.classList.toggle('active', mode === 'local');
+  modeYouTubeBtn.classList.toggle('active', mode === 'youtube');
+
+  player.pause();
+  if (ytPlayer && ytReady) ytPlayer.pauseVideo();
+
+  // Swap which input is visible
+  chooseFolderBtn.classList.toggle('hidden', mode === 'youtube');
+  ytLinkInput.classList.toggle('hidden', mode === 'local');
+
+  if (mode === 'local') {
+    renderPlaylist();
+  }
+}
+
+// Extract a playlist ID from any pasted YouTube URL format
+function extractPlaylistId(url) {
+  const match = url.match(/[?&]list=([^&]+)/);
+  return match ? match[1] : null;
+}
+
+loadYtPlaylistBtn.addEventListener('click', () => {
+  const url = ytPlaylistUrlInput.value.trim();
+  const playlistId = extractPlaylistId(url);
+
+  if (!playlistId) {
+    alert('Could not find a playlist ID in that link. Make sure it includes "?list=..."');
+    return;
+  }
+
+  // loadYtPlaylistBtn.textContent = 'Loading...';
+
+  if (!ytPlayer) {
+    loadYouTubeAPI(playlistId); // pass the ID through so it's ready once the API loads
+  } else {
+    ytPlayer.loadPlaylist(playlistId);
+  }
+
+  // fetchYouTubePlaylist(playlistId).finally(() => {
+  //   loadYtPlaylistBtn.textContent = 'Load';
+  // });
+});
+
+
+
+// MUSIC FOLDER PLAYER JS -------------------------------------------------------------
 const folderInput = document.getElementById('folderInput');
 const chooseFolderBtn = document.getElementById('chooseFolderBtn');
 const player = document.getElementById('player');
@@ -163,26 +310,42 @@ function setActiveButton(btn) {
 
 // --- Play ---
 playBtn.addEventListener('click', () => {
-  player.play();
+  if (sourceMode === 'local') {
+    player.play();
+  } else if (ytReady) {
+    ytPlayer.playVideo();
+  }
 });
 
 // --- Pause ---
 pauseBtn.addEventListener('click', () => {
-  player.pause();
+  if (sourceMode === 'local') {
+    player.pause();
+  } else if (ytReady) {
+    ytPlayer.pauseVideo();
+  }
 });
 
 // --- Next (flashes active briefly, since it's a momentary action) ---
 nextBtn.addEventListener('click', (e) => {
-  currentIndex = getNextIndex();
-  loadSong(currentIndex);
+  if (sourceMode === 'local') {
+    currentIndex = getNextIndex();
+    loadSong(currentIndex);
+  } else if (ytReady) {
+    ytPlayer.nextVideo();
+  }
   setActiveButton(e.currentTarget);
   setTimeout(() => e.currentTarget.classList.remove('active'), 200);
 });
 
 // --- Previous (same momentary flash) ---
 prevBtn.addEventListener('click', (e) => {
-  currentIndex = getPrevIndex();
-  loadSong(currentIndex);
+  if (sourceMode === 'local') {
+    currentIndex = getPrevIndex();
+    loadSong(currentIndex);
+  } else if (ytReady) {
+    ytPlayer.previousVideo();
+  }
   setActiveButton(e.currentTarget);
   setTimeout(() => e.currentTarget.classList.remove('active'), 200);
 });
@@ -300,7 +463,13 @@ player.volume = volumeSlider.value / 100;
 
 volumeSlider.addEventListener('input', () => {
   const vol = volumeSlider.value / 100;
-  player.volume = vol;
+
+  if (sourceMode === 'local') {
+    player.volume = vol;
+  } else if (ytReady) {
+    ytPlayer.setVolume(volumeSlider.value); // YouTube API uses 0–100, not 0–1
+  }
+
   updateVolumeIcon(vol);
 });
 

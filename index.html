@@ -17,6 +17,16 @@
   </head>
   
   <body>
+    <div id="loadingScreen">
+      <div class="loader-div">
+      <div class="loader-cassette">
+        <div class="loader-reel loader-reel-left"></div>
+        <div class="loader-reel loader-reel-right"></div>
+      </div>
+      <p class="loader-text">mix-टेप</p>
+      <p class="loader-subtext">loading your tape...</p>
+      </div>
+    </div>
     
     <header class="Z2">
       <div class="place-time Container" style="min-height: fit-content;">
@@ -31,8 +41,28 @@
       </div>
 
     <input type="file" id="folderInput" webkitdirectory multiple hidden>
-    <button id="chooseFolderBtn">upload folder</button>
+    
+    <div class="source-toggle">
+      <button id="modeLocal" class="mode-btn active"><i class="fa-solid fa-folder"></i></button>
+      <button id="modeYouTube" class="mode-btn"><i class="fa-brands fa-youtube"></i></button>
+      <!-- <button id="chooseFolderBtn">upload folder</button> -->
       
+      <div id="sourceInputContainer">
+        <!-- Local mode: folder picker -->
+        <input type="file" id="folderInput" webkitdirectory multiple hidden>
+        <button id="chooseFolderBtn">upload folder</button>
+        
+        <!-- YouTube mode: link paste input (hidden by default) -->
+        <div id="ytLinkInput" class="yt-link-input hidden">
+          <input type="text" id="ytPlaylistUrl" placeholder="paste playlist link...">
+          <button id="loadYtPlaylistBtn" class="mode-btn"><i class="fa-solid fa-download"></i></button>
+        </div>
+      </div>
+    </div>
+    <!-- Hidden YouTube player -->
+    <div id="youtube-player"></div>
+    
+    
     <div class="music-player"> 
       <div id="PlayerMain" class="Z2">
         
@@ -91,13 +121,8 @@
 
     </main>
     
-    <!-- <footer class="Z2">
-      <div class="Socials">  
-        <a href="https://www.instagram.com/wandering_ech0/" target="_blank">- Instagram -</a>
-        
-        <a href="">- Mail -</a>
-      </div>
-    </footer> -->
+    <footer>
+    </footer>
     
     <script src="app.js"></script>
   

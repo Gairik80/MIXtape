@@ -109,7 +109,28 @@ footer{
     align-items: center;
 }
 .text{
-    margin: 25px; padding-block: 25px; width: 17.5rem; border-block: 10px solid; border-radius: 5px;
+    margin: 25px;    padding: 1rem; 
+    width: 17.5rem; 
+    border: 2px solid antiquewhite; border-radius: 6px;
+
+    text-align: left;
+}
+
+.now-playing-wrapper {  position: relative;  display: inline-block;}
+.vinyl-record {
+  position: absolute;
+  top: 50%;  left: -150px;         /* pushes it out to the side of the card */
+  transform: translateY(-50%);
+  width: 300px; height: 300px;  /* adjust size to taste */
+  
+  z-index: -1;                  /* sits behind the card */
+                 
+  animation: vinylSpin 4s linear infinite;
+}
+
+@keyframes vinylSpin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to   { transform: translateY(-50%) rotate(360deg); }
 }
 
 /* THE CASETTE --------------------------------------------------------------------*/

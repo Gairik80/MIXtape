@@ -19,10 +19,12 @@
 }
 
 body{
-    background-image: url(Images/43fffc16-847c-49d0-b2ad-4c9bf6c5848f.png); background-size: 110%;
-    background-position: center;    background-repeat: no-repeat; background-position: fixed;
+    background-image: url(Images/43fffc16-847c-49d0-b2ad-4c9bf6c5848f.png); 
+    background-size: 110%;
+    background-position: center;    background-repeat: no-repeat;    background-position: fixed;
 
     margin: 0px;
+    min-height: 100vh;
     width: 100dvw; height: 100dvh;
     color: antiquewhite;
     font-family: 'Work Sans', sans-serif;
@@ -92,9 +94,11 @@ footer{
 
 .Container{
     width: fit-content;
-    min-height: 20svh; max-height: 40svh;
+    min-height: 20svh;    max-height: 25svh;
     border-radius: 14px;
     backdrop-filter: blur(10px);
+
+    z-index: 1;
 }
 .Z2{z-index: 2;}
 
@@ -105,11 +109,10 @@ footer{
     width: min(max-content, 10svw);
     
     display: flex;    flex-flow: row;
-    justify-content: space-around;
-    align-items: center;
+    justify-content: space-around;    align-items: center;
 }
 .text{
-    margin: 25px;    padding: 1rem; 
+    margin: 17.5px;    padding: 1.25rem; 
     height: 22.5svh;   width: 17.5rem; 
     border: 2px solid antiquewhite; border-radius: 6px;
 
@@ -119,15 +122,13 @@ footer{
 .now-playing-wrapper {  position: relative;  display: inline-block;}
 .vinyl-record {
   position: absolute;
-  top: 50%;  left: -150px;         /* pushes it out to the side of the card */
+  top: 50%;  left: -135px;
   transform: translateY(-50%);
-  width: 300px; height: 300px;  /* adjust size to taste */
+  width: 275px;  height: 275px;
   
-  z-index: -1;                  /* sits behind the card */
-                 
-  animation: vinylSpin 4s linear infinite;
+  z-index: -1;
+  animation: vinylSpin 4s linear infinite;  /* only this element spins */
 }
-
 @keyframes vinylSpin {
   from { transform: translateY(-50%) rotate(0deg); }
   to   { transform: translateY(-50%) rotate(360deg); }
@@ -135,35 +136,35 @@ footer{
 
 /* THE CASETTE --------------------------------------------------------------------*/
 #Casette{
-    background-image: url(Images/Pic.png);
-    background-size: cover;
-    background-position: center;
+    background-image: url(Images/Pic2.png);    background-size: cover;    background-position: center;
+    backdrop-filter: none;
     
-    height: 300px;    width: 462px;
+    width:415.75px;
+    max-height: 300px;    max-width: 462px;     aspect-ratio: 462 / 300;
     box-shadow: 0px 0px 25px rgba( 0, 0, 0, 1);
     
     animation: float 7.5s ease-in-out infinite;
 
     position: relative;
-}
-.reel{
-    position: absolute;
-    top: 100px; width: 70px; height: 70px; scale: 0.825 ;
+  }
+  .reel{
+    position: absolute;   z-index: 1;
+    top: 85.5px; width: 70px; height: 70px; scale: 0.85;
     border-radius: 50%;
-    background-image: url(Images/reel.png);
-    background-size: cover;
-}
+    background-image: url(Images/reel.png);    background-size: cover;
+  }
 
-.reel-left  { left: 98px;   animation: spin1 2s linear infinite;}
-.reel-right { right: 98px;  animation: spin2 2s linear infinite;}
+.reel-left  { left: 85px;   animation: spin1 2s linear infinite;}
+.reel-right { right: 85px;  animation: spin2 2s linear infinite;}
 
 /* THE BUTTONS --------------------------------------------------------------------*/
 .Buttons{
     background-color:#f12829;
     border: 2.5px solid #f12829; border-radius: 5px;
-    width:375.75px; height: 47.5px;
+    
+    max-width:337.75px; max-height: 42.75px;    aspect-ratio: 337.75 / 42.75;
     position: relative;
-    top: 40px; left:42.75px;
+    top: 35px; left: 40.75px;
 
     display: flex;
     flex-direction: row;
@@ -180,7 +181,7 @@ button{
 }
 button:hover{    border-color: black;}
 
-.extra-controls{ position: absolute; left: 50%; top: 70%; padding: 0.5rem; transform: translateX(-17.5dvw); }
+.extra-controls{ position: absolute; left: 50%; top: 72.5svh; padding: 0.5rem; transform: translateX(-17.5dvw); }
 #shuffleBtn{
     background-color: transparent;    color: antiquewhite;  
     border: 2px solid transparent;
@@ -215,7 +216,7 @@ button:hover{    border-color: black;}
 /* MUSIC PLAYER -------------------------------------------------------------------*/
 .now-playing {
   margin: 12.5px;  max-height: 10dvh; overflow: hidden;
-  font-size: 1.2rem; font-style: italic;
+  font-size: 1.25rem; font-style: italic;
   text-align: left;
 }
 
@@ -361,7 +362,7 @@ button:hover{    border-color: black;}
 /* VOLUME BAR ---------------------------------------------------------------------*/
 .Volume{
   position: absolute;
-  left: 50%; top: 70%; 
+  left: 50%; top: 72.5svh;   scale: 0.85;
   
   box-shadow: 0px 0px 20px rgba( 0, 0, 0, 0.25);
   backdrop-filter: blur(25px);
@@ -496,18 +497,9 @@ button:hover{    border-color: black;}
   margin: 0;
 }
 
-
-/* FOOTER -------------------------------------------------------------------------*/
-footer{
-  border: 2.5px solid red;   border-radius: 8px;   box-sizing: border-box;
-  height: 10dvh;
-
-  background-color:#222;  opacity: 0.5;
-}
-
 /* TOGGLE SOURCE ------------------------------------------------------------------*/
 .source-toggle {
-  display: flex;  gap: 8px;
+  display: flex;  gap: 8px;  scale: 0.85;
 }
 
 .mode-btn {
@@ -518,6 +510,8 @@ footer{
   font-family: 'Space-Mono', monospace; font-size: 1rem; color:rgba( 255, 255, 255, 0.5);
   cursor: pointer;
   padding-inline: 1rem;
+
+  display: flex;  align-items: center; justify-content: center;
 }
 
 .mode-btn.active {
@@ -560,5 +554,20 @@ footer{
 
 #loadYtPlaylistBtn:hover {
   background-color: antiquewhite;
-  color: #222;
+  color: #222;  
+}
+
+/* FOOTER -------------------------------------------------------------------------*/
+footer{
+  background-color: rgba( 0, 0, 0, 0.25);
+  /* height: 15dvh; */
+  border: 1px solid red;   border-radius: 0.5rem;   box-sizing: border-box;
+  backdrop-filter: blur(5px);
+
+  display: flex;  justify-content: left;
+  
+}
+#vinylLabel{
+  /* padding: 1rem; */
+  clip-path: circle(50% at 25% 50%);
 }

@@ -146,13 +146,23 @@ function onYTError(event) {
   nextBtn.click();
 }
 
+function updateVinylLabel(videoId) {
+  document.getElementById('vinylLabel').src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
+
 function onYTStateChange(event) {
   const reels = document.querySelectorAll('.reel');
   if (event.data === YT.PlayerState.PLAYING) {
     reels.forEach(r => r.style.animationPlayState = 'running');
     setActiveButton(playBtn);
+    
+    const videoData = ytPlayer.getVideoData();
+    nowPlaying.textContent = videoData.title;
+    updateVinylLabel(videoData.video_id);
+    
     nowPlaying.textContent = ytPlayer.getVideoData().title;
-  } else if (event.data === YT.PlayerState.PAUSED) {
+  } 
+  else if (event.data === YT.PlayerState.PAUSED) {
     reels.forEach(r => r.style.animationPlayState = 'paused');
     setActiveButton(pauseBtn);
   }

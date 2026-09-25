@@ -19,7 +19,7 @@
 }
 
 body{
-    background-image: url(Images/43fffc16-847c-49d0-b2ad-4c9bf6c5848f.png); 
+    background: linear-gradient(90deg, #d30c0c, #ff6d00); 
     background-size: 110%;
     background-position: center;    background-repeat: no-repeat;    background-position: fixed;
 
@@ -48,6 +48,8 @@ body::before {
     rgba(0, 0, 0, 0.6) 100% 
   );
 }
+.day-time{  background-image: url(Images/day_mode_background.png);}
+.night-time{  background-image: url(Images/night_mode_background.png);}
 
 h1{ margin: 2.5svh; margin-top: 7.5svh; }
 h3{ font-size: 1.5rem; }

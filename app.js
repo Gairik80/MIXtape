@@ -21,6 +21,21 @@ function updateClock() {
   clockEl.textContent = now.toLocaleTimeString('en-US', options);
 }
 
+function theme() {
+  const body = document.querySelector("body");
+  const hour = new Date().toLocaleString('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    hour12: false
+  });
+
+  const h = parseInt(hour, 10);
+  const isDaytime = h >= 6 && h < 18;
+
+  body.classList.toggle('day-time', isDaytime);
+  body.classList.toggle('night-time', !isDaytime);
+}
+
 updateClock();
 setInterval(updateClock, 1000);
 

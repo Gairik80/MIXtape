@@ -3,6 +3,7 @@ window.addEventListener('load', () => {
   setTimeout(() => {
     loadingScreen.classList.add('hidden');
   }, 1200); // small delay so it doesn't feel instant/jarring
+  theme();
 });
 
 // --- Place time ---

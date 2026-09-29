@@ -138,10 +138,10 @@ footer{
 
 /* THE CASETTE --------------------------------------------------------------------*/
 #Casette{
-    background-image: url(Images/Pic2.png);    background-size: cover;    background-position: center;
+    background-image: url(Images/casette.png);    background-size: cover;    background-position: center;
     backdrop-filter: none;
     
-    width:415.75px;
+    width: 420px;
     max-height: 300px;    max-width: 462px;     aspect-ratio: 462 / 300;
     box-shadow: 0px 0px 25px rgba( 0, 0, 0, 1);
     
@@ -150,10 +150,10 @@ footer{
     position: relative;
   }
   .reel{
-    position: absolute;   z-index: 1;
-    top: 85.5px; width: 70px; height: 70px; scale: 0.85;
+    position: absolute;  z-index: -1;
+    top: 87.5px; width: 70px; height: 70px; scale: 0.70;
     border-radius: 50%;
-    background-image: url(Images/reel.png);    background-size: cover;
+    background-image: url(Images/reel2.png);    background-size: cover;
   }
 
 .reel-left  { left: 85px;   animation: spin1 2s linear infinite;}
@@ -161,8 +161,8 @@ footer{
 
 /* THE BUTTONS --------------------------------------------------------------------*/
 .Buttons{
-    background-color:#f12829;
-    border: 2.5px solid #f12829; border-radius: 5px;
+    /* background-color:#f12829; */
+    /* border: 2.5px solid #f12829; border-radius: 5px; */
     
     max-width:337.75px; max-height: 42.75px;    aspect-ratio: 337.75 / 42.75;
     position: relative;
@@ -238,7 +238,9 @@ button:hover{    border-color: black;}
     background-color: antiquewhite; color: #222;
     transition: 0.25s;
   }
-  
+#loadYtPlaylistBtn:hover{
+  border:#000; background-color: transparent;
+}
   
   /* #playlist {
     list-style: none;
@@ -542,20 +544,19 @@ button:hover{    border-color: black;}
   color: rgba(255,255,255,0.5);
 }
 
-/* #loadYtPlaylistBtn {
-  height: 50px;
-  padding-inline: 1.25rem;
+#loadYtPlaylistBtn {
+  height: 50px; width: 50px;
   background: transparent;
-  border: 2px solid rgba(255,255,255,0.5);
-  color: rgba(255,255,255,0.7);
+  border: 2px solid rgba( 255, 255, 255, 0.5); backdrop-filter: blur(25px);
+  
+  font-family: 'Space-Mono', monospace; font-size: 1rem; color:rgba( 255, 255, 255, 0.5);
   cursor: pointer;
-  border-radius: 4px;
-  backdrop-filter: blur(25px);
-} */
+  padding-inline: 1rem;
+} 
 
 #loadYtPlaylistBtn:hover {
-  background-color: antiquewhite;
-  color: #222;  
+  background-color: transparent; color: antiquewhite;
+  transition: 0.25s;
 }
 
 /* FOOTER -------------------------------------------------------------------------*/

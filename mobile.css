@@ -158,9 +158,6 @@
     height: 44px;
   }
 }
-  #loadingScreen{
-    max-width: 0; max-height: 0;
-  }
 /* @media (max-width: 420px){
   .Heading{ font-size: 2.1rem; }
   .loader-text{ font-size: 2.75rem; }

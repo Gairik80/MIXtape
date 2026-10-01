@@ -584,7 +584,7 @@ button:hover{ border-color: antiquewhite; }
   background: transparent;
   border: 2px solid rgba(255,255,255,0.5);  border-radius: 6px;  backdrop-filter: blur(25px);
   
-  font-family: 'Spcae-Mono', monospace;  font-size: 1rem; color:rgba( 255, 255, 255, 0.5);
+  font-family: 'Space-Mono', monospace;  font-size: 1rem; color:rgba( 255, 255, 255, 0.5);
   padding-inline: 1rem;
 }
 

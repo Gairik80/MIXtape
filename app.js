@@ -254,7 +254,7 @@ document.addEventListener('click', (e) => {
 setMode('youtube'); // Default mode is set to youtube on page load
 
 
-// --- BUTTON CONTROLS ---
+// --- BUTTON CONTROLS --------------------------------------------------------------------------
 const allButtons = document.querySelectorAll('.Buttons button');
 const playBtn = document.getElementById('play');
 const pauseBtn = document.getElementById('pause');
@@ -274,10 +274,22 @@ allButtons.forEach(btn => {
   btn.addEventListener('pointerdown', playClickSound);
 });
 
-// --- Active state helper ---
+// --- Button state helpers ---
 function setActiveButton(btn) {
-  allButtons.forEach(b => b.classList.remove('pressed'));
+  allButtons.forEach(b => {
+    clearTimeout(b._pressTimeout);
+    b.classList.remove('pressed');
+  });
   btn.classList.add('pressed');
+}
+
+function flashPressed(btn) {
+  if (!btn) return;
+  btn.classList.add('pressed');
+  clearTimeout(btn._pressTimeout);
+  btn._pressTimeout = setTimeout(() => {
+    btn.classList.remove('pressed');
+  }, 200);
 }
 
 // --- Play ---
@@ -306,9 +318,7 @@ nextBtn.addEventListener('click', (e) => {
   } else if (ytReady) {
     ytPlayer.nextVideo();
   }
-  setActiveButton(e.currentTarget);
-  nextBtn.classList.toggle('pressed');
-  prevBtn.classList.remove('pressed');
+  flashPressed(e.currentTarget);
 });
 
 // --- Previous ---
@@ -319,9 +329,7 @@ prevBtn.addEventListener('click', (e) => {
   } else if (ytReady) {
     ytPlayer.previousVideo();
   }
-  setActiveButton(e.currentTarget);
-  prevBtn.classList.toggle('pressed');
-  nextBtn.classList.remove('pressed');
+  flashPressed(e.currentTarget);
 });
 
 player.addEventListener('ended', () => {
@@ -380,8 +388,8 @@ function getPrevIndex() {
   return shuffledOrder[prevPos];
 }
 
-// SIDEBAR JS------------------------------------------------------------------------
 
+// SIDEBAR JS------------------------------------------------------------------------
 const playlistSidebar = document.getElementById('playlistSidebar');
 const playlistToggle = document.getElementById('playlistToggle');
 const closeSidebar = document.getElementById('closeSidebar');
@@ -431,7 +439,7 @@ function loadSong(index) {
 const volumeSlider = document.getElementById('volumeSlider');
 const volumeIcon = document.getElementById('volumeIcon');
 
-// Set initial volume to match the slider's starting value
+// Setting initial volume to match the slider's starting value
 player.volume = volumeSlider.value / 100;
 
 volumeSlider.addEventListener('input', () => {
@@ -473,34 +481,35 @@ volumeIcon.addEventListener('click', () => {
 
 // --- Keyboard Shortcuts ---
 document.addEventListener('keydown', (e) => {
-  // Don't hijack typing in the playlist URL field (or any input/textarea)
+  // No hijack typing in the playlist URL field (or any input/textarea)
   const tag = e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
-  // prevent page scroll on space/arrows
+  // preventing page scroll on space/arrows
   if ([' ', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
     e.preventDefault();
   }
 
   switch (e.key) {
-    case ' ':
-      sourceMode === 'local'
-        ? (player.paused ? player.play() : player.pause())
-        : (ytReady && (ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo()));
-      playBtn.classList.toggle('pressed');
-      pauseBtn.classList.toggle('pressed');
+    case ' ': {
+      let nowPlaying_;
+      if (sourceMode === 'local') {
+        nowPlaying_ = player.paused; // about to start playing
+        player.paused ? player.play() : player.pause();
+      } else if (ytReady) {
+        nowPlaying_ = ytPlayer.getPlayerState() === 1; // currently playing → about to pause
+        ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo();
+      }
+      setActiveButton(nowPlaying_ ? playBtn : pauseBtn);
       clickSound.play();
       break;
+    }
     case 'ArrowRight':
-      nextBtn.click();
-      nextBtn.classList.toggle('pressed');      prevBtn.classList.remove('pressed');
-      playBtn.classList.add('pressed');      pauseBtn.classList.remove('pressed');
+      nextBtn.click(); // click handler already flashes the button
       clickSound.play();
       break;
     case 'ArrowLeft':
-      prevBtn.click();
-      prevBtn.classList.toggle('pressed');      nextBtn.classList.remove('pressed');
-      playBtn.classList.add('pressed');      pauseBtn.classList.remove('pressed');
+      prevBtn.click(); // click handler already flashes the button
       clickSound.play();
       break;
     case 'ArrowUp':

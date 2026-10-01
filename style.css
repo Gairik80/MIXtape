@@ -73,14 +73,15 @@ footer{
 
 /* THE PLACE TIME ------------------------------------------------------------------ */
 .place-time {
-    font-family: 'Courier New';    font-size: 14px;    letter-spacing: 1px;
+    font-family: 'Courier New';    font-size: 0.75rem;    letter-spacing: 2.5px;
     color: antiquewhite;
-    text-align: center;
-    display: flex;    flex-direction: column;   gap: 2px;
+    text-align: left;
+    display: flex;    flex-direction: column;   gap: 5px;
+    padding: 0.5rem;    padding-inline: 1.25rem;
 }
 
 .place-label {
-    font-size: 12.5px;
+    font-size: 0.75rem;
     opacity: 0.75;
     text-transform: uppercase;    letter-spacing: 2px;
 }
@@ -90,8 +91,6 @@ footer{
 .Heading{
     font-family: 'Yatra One', cursive;    font-size: 5.25rem;
     text-shadow: 0px 0px 15px rgba( 255, 255, 255, 0.5);
-    
-    backdrop-filter: blur(0.75px);
 }
 
 .Container{
@@ -163,25 +162,27 @@ footer{
 .Buttons{
     /* background-color:#f12829; */
     /* border: 2.5px solid #f12829; border-radius: 5px; */
-    
     max-width:337.75px; max-height: 42.75px;    aspect-ratio: 337.75 / 42.75;
     position: relative;
     top: 35px; left: 40.75px;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: center; gap: 10px;
-}
-button{
+    
+    display: flex;    flex-direction: row;    justify-content: center; gap: 10px;
+  }
+  button{
     background-color: antiquewhite;
     border-width: 2.5px; border-radius: 5px; border-color: antiquewhite;
+    box-shadow: 0px 0px 5px 0.5px rgba( 0, 0, 0, 0.5);
     
     aspect-ratio: 1;
     
     color: black;
     font-size: 1.5rem;    
 }
-button:hover{    border-color: black;}
+button:hover{ border-color: antiquewhite; }
+
+.pressed{
+  background-color: antiquewhite; border: 1.5px solid rgb(177, 166, 152); transform: scale(105%); box-shadow: 0px 0px 5px 0.5px rgba( 0, 0, 0, 0.75);
+}
 
 .extra-controls{ position: absolute; left: 50%; top: 72.5svh; padding: 0.5rem; transform: translateX(-17.5dvw); }
 #shuffleBtn{
@@ -194,7 +195,7 @@ button:hover{    border-color: black;}
 
     transition: 0.25s;
 } 
-#shuffleBtn.active{
+#shuffleBtn:hover, #shuffleBtn.active{
   background-color: antiquewhite; color: #000;
   border: 2px solid rgba( 255, 255, 255, 0.5);
 }
@@ -216,13 +217,63 @@ button:hover{    border-color: black;}
 
 
 /* MUSIC PLAYER -------------------------------------------------------------------*/
+@keyframes blink {
+  50% { border-color: transparent; }
+}
 .now-playing {
   margin: 12.5px;  max-height: 10dvh; overflow: hidden;
-  font-size: 1.25rem; font-style: italic;
+  font-size: 1.15rem; font-style: italic;
   text-align: left;
 }
 
 #player {  width: 0; scale: 0;}
+
+
+.source-dropdown {
+  position: absolute; top:25%; left: 2.5%;
+  /* display: inline-block; */
+}
+
+.dropdown-toggle-btn {
+  background: transparent;  backdrop-filter: blur(5px);
+  border: 2.5px solid rgba( 0, 0, 0, 0);  border-radius: 8px;
+
+  font-family: 'Space-Mono', monospace; font-size: 1.75rem; color: antiquewhite;
+
+  height: 50px;
+  padding-inline: 0rem;
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+.dropdown-toggle-btn:hover {
+  background-color: antiquewhite; color: #000; border: 2.5px solid antiquewhite;
+}
+
+.dropdown-panel {
+  position: absolute;
+  left: calc(100% + 20px);
+  top: 0%;
+  z-index: 20;
+
+  display: flex;  flex-direction: column;  gap: 10px;
+  padding-inline: 0;
+
+  /* background: rgba(0, 0, 0, 0.35); */
+  /* border: 2px solid rgba(255,255,255,0.3); */
+  backdrop-filter: blur(5px);  border-radius: 8px;
+
+  max-height: 0;  overflow: hidden;  opacity: 0; pointer-events: none;
+  transform: translateX(-75px);
+
+  transition: max-height 0.3s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dropdown-panel.open {
+  max-height: 100px;  opacity: 1;  pointer-events: auto;
+  transform: translateX(0);
+}
+
 
 /* CHOOSE FOLDER ------------------------------------------------------------------*/
 #chooseFolderBtn{
@@ -238,9 +289,6 @@ button:hover{    border-color: black;}
     background-color: antiquewhite; color: #222;
     transition: 0.25s;
   }
-#loadYtPlaylistBtn:hover{
-  border:#000; background-color: transparent;
-}
   
   /* #playlist {
     list-style: none;
@@ -392,7 +440,7 @@ button:hover{    border-color: black;}
 #volumeSlider {
   -webkit-appearance: none;
   appearance: none;
-  background: #000;
+  background: antiquewhite;
   
   width: 150px;  height: 2.5px;
   border-radius: 4px;
@@ -555,7 +603,7 @@ button:hover{    border-color: black;}
 } 
 
 #loadYtPlaylistBtn:hover {
-  background-color: transparent; color: antiquewhite;
+  background-color: antiquewhite; color: #000;
   transition: 0.25s;
 }
 

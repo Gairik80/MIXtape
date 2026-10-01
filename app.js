@@ -5,12 +5,12 @@ window.addEventListener('load', () => {
   }, 1200); // small delay so it doesn't feel instant/jarring
   theme();  // changes theme on page reload
 });
-
+ 
 // --- Place time ---
 function updateClock() {
   const clockEl = document.getElementById('clock');
   if (!clockEl) return;
-
+ 
   const now = new Date();
   const options = {
     timeZone: 'Asia/Kolkata',
@@ -21,7 +21,7 @@ function updateClock() {
   };
   clockEl.textContent = now.toLocaleTimeString('en-US', options);
 }
-
+ 
 function theme() {
   const body = document.querySelector("body");
   const hour = new Date().toLocaleString('en-US', {
@@ -29,21 +29,21 @@ function theme() {
     hour: '2-digit',
     hour12: false
   });
-
+ 
   const h = parseInt(hour, 10);
   const isDaytime = h >= 6 && h < 18;
-
+ 
   body.classList.toggle('day-time', isDaytime);
   body.classList.toggle('night-time', !isDaytime);
 }
-
+ 
 updateClock();
-setInterval(updateClock, 1000);
-
+setInterval(updateClock, 1000); 
+ 
 // --- Sync play/pause active state to actual player state ---
 function onPlayerStateChange(event) {
   const reels = document.querySelectorAll('.reel');
-
+ 
   if (event.data === YT.PlayerState.PLAYING) {
     reels.forEach(r => r.style.animationPlayState = 'running');
     setActiveButton(playBtn);
@@ -57,68 +57,69 @@ function onPlayerStateChange(event) {
     stopTimeUpdates();
   }
 }
-
+ 
 // --- Mouse parallax for background -----------------------------------------------
 const body = document.body;
 let targetX = 0, targetY = 0;
 let currentX = 0, currentY = 0;
-
+ 
 document.addEventListener('mousemove', (e) => {
   // normalize mouse position to -1 → 1 range
   const x = (e.clientX / window.innerWidth - 0.5) * 2;
   const y = (e.clientY / window.innerHeight - 0.5) * 2;
-
+ 
   targetX = x;
   targetY = y;
 });
-
+ 
 function animateBackground() {
   // smooth easing toward the target position
   currentX += (targetX - currentX) * 0.025;
   currentY += (targetY - currentY) * 0.025;
-
+ 
   const moveX = currentX * 7.5; // max shift in px — tweak strength here
   const moveY = currentY * 7.5;
-
+ 
   body.style.backgroundPosition = `calc(50% + ${moveX}px) calc(50% + ${moveY}px)`;
-
+ 
   requestAnimationFrame(animateBackground);
 }
-
+ 
 animateBackground();
-
-
+ 
+ 
 // --- SOURCE MODE -----------------------------------------------------------------
-let sourceMode = 'local'; // 'local' or 'youtube'
+let sourceMode = 'youtube'; // 'local' or 'youtube'
 let ytPlayer = null;
 let ytReady = false;
 
 const modeLocalBtn = document.getElementById('modeLocal');
 const modeYouTubeBtn = document.getElementById('modeYouTube');
-
+ 
 modeLocalBtn.addEventListener('click', () => setMode('local'));
 modeYouTubeBtn.addEventListener('click', () => setMode('youtube'));
-
+ 
 function setMode(mode) {
   sourceMode = mode;
   modeLocalBtn.classList.toggle('active', mode === 'local');
   modeYouTubeBtn.classList.toggle('active', mode === 'youtube');
-
+ 
   // pause whichever was playing before switching
   player.pause();
   if (ytPlayer && ytReady) ytPlayer.pauseVideo();
-
+ 
   if (mode === 'youtube' && !ytPlayer) {
     loadYouTubeAPI();
   }
 }
+
 
 // --- YOUTUBE SETUP ---
 function loadYouTubeAPI(playlistId) {
   const tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   document.body.appendChild(tag);
-
+ 
   window.onYouTubeIframeAPIReady = function () {
     ytPlayer = new YT.Player('youtube-player', {
       height: '1',
@@ -135,11 +136,11 @@ function loadYouTubeAPI(playlistId) {
     });
   };
 }
-
+ 
 async function fetchYouTubePlaylist(playlistId) {
   let allItems = [];
   let nextPageToken = '';
-
+ 
   do {
     const res = await fetch(
       `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&pageToken=${nextPageToken}&key=${YT_API_KEY}`
@@ -148,35 +149,33 @@ async function fetchYouTubePlaylist(playlistId) {
     allItems = allItems.concat(data.items);
     nextPageToken = data.nextPageToken || '';
   } while (nextPageToken);
-
+ 
   ytVideos = allItems.map(item => ({
     videoId: item.snippet.resourceId.videoId,
     title: item.snippet.title
   }));
-
+ 
   renderYouTubePlaylist();
 }
-
+ 
 function onYTError(event) {
   console.log('YouTube playback error code:', event.data);
   nextBtn.click();
 }
-
+ 
 function updateVinylLabel(videoId) {
   document.getElementById('vinylLabel').src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
-
+ 
 function onYTStateChange(event) {
   const reels = document.querySelectorAll('.reel');
   if (event.data === YT.PlayerState.PLAYING) {
     reels.forEach(r => r.style.animationPlayState = 'running');
     setActiveButton(playBtn);
-    
+ 
     const videoData = ytPlayer.getVideoData();
     nowPlaying.textContent = videoData.title;
     updateVinylLabel(videoData.video_id);
-    
-    nowPlaying.textContent = ytPlayer.getVideoData().title;
   } 
   else if (event.data === YT.PlayerState.PAUSED) {
     reels.forEach(r => r.style.animationPlayState = 'paused');
@@ -185,74 +184,76 @@ function onYTStateChange(event) {
 }
 
 
-
-
+const DEFAULT_YT_PLAYLIST_ID = 'PLC4dzH2q2JVg'; // Example playlist ID
+ 
 const ytLinkInput = document.getElementById('ytLinkInput');
 const ytPlaylistUrlInput = document.getElementById('ytPlaylistUrl');
 const loadYtPlaylistBtn = document.getElementById('loadYtPlaylistBtn');
-
+ 
 function setMode(mode) {
   sourceMode = mode;
   modeLocalBtn.classList.toggle('active', mode === 'local');
   modeYouTubeBtn.classList.toggle('active', mode === 'youtube');
-
+ 
   player.pause();
   if (ytPlayer && ytReady) ytPlayer.pauseVideo();
-
+ 
   // Swap which input is visible
   chooseFolderBtn.classList.toggle('hidden', mode === 'youtube');
   ytLinkInput.classList.toggle('hidden', mode === 'local');
-
+ 
+  if (mode === 'youtube' && !ytPlayer) {
+    loadYouTubeAPI(DEFAULT_YT_PLAYLIST_ID);
+  }
   if (mode === 'local') {
     renderPlaylist();
   }
 }
-
+ 
 // Extract a playlist ID from any pasted YouTube URL format
 function extractPlaylistId(url) {
   const match = url.match(/[?&]list=([^&]+)/);
   return match ? match[1] : null;
 }
-
+ 
 loadYtPlaylistBtn.addEventListener('click', () => {
   const url = ytPlaylistUrlInput.value.trim();
   const playlistId = extractPlaylistId(url);
-
+ 
   if (!playlistId) {
     alert('Could not find a playlist ID in that link. Make sure it includes "?list=..."');
     return;
   }
-
+ 
   // loadYtPlaylistBtn.textContent = 'Loading...';
-
+ 
   if (!ytPlayer) {
     loadYouTubeAPI(playlistId); // pass the ID through so it's ready once the API loads
   } else {
     ytPlayer.loadPlaylist(playlistId);
   }
-
+ 
   // fetchYouTubePlaylist(playlistId).finally(() => {
   //   loadYtPlaylistBtn.textContent = 'Load';
   // });
 });
-
-
-
+ 
+ 
 // MUSIC FOLDER PLAYER JS -------------------------------------------------------------
 const folderInput = document.getElementById('folderInput');
 const chooseFolderBtn = document.getElementById('chooseFolderBtn');
 const player = document.getElementById('player');
 const nowPlaying = document.getElementById('nowPlaying');
 const playlistEl = document.getElementById('sidebarplaylist');
-
+ 
 let songs = [];
 let currentIndex = 0;
-
+ 
 chooseFolderBtn.addEventListener('click', () => folderInput.click());
-
+ 
 folderInput.addEventListener('change', (e) => {
   const files = Array.from(e.target.files).filter(f => f.type.startsWith('audio/'));
-
+ 
   if (files.length === 0) {
     alert('No audio files found in that folder.');
     return;
@@ -260,21 +261,21 @@ folderInput.addEventListener('change', (e) => {
   // Extract folder name from the first file's relative path
   const folderName = files[0].webkitRelativePath.split('/')[0];
   chooseFolderBtn.textContent = `📁 ${folderName}`;
-
+ 
   songs = files.map(file => ({
   name: cleanSongName(file.name),
   url: URL.createObjectURL(file)
   }));
-
+ 
   renderPlaylist();
   loadSong(0);
 });
-
+ 
 // cleanSongName("Song Name 320kbps.mp3")        // "Song Name"
 // cleanSongName("Track - (320 KBPS).mp3")       // "Track -"
 // cleanSongName("My Song [128kbps].mp3")        // "My Song"
 // cleanSongName("Artist - Title 192.mp3")       // "Artist - Title"
-
+ 
 function cleanSongName(filename) {
   return filename
     .replace(/\.[^/.]+$/, '')                          // remove extension
@@ -283,7 +284,7 @@ function cleanSongName(filename) {
     .replace(/\s{2,}/g, ' ')                             // collapse leftover double spaces
     .trim();                                              // trim leading/trailing spaces/dashes
 }
-
+ 
 // function renderPlaylist() {
 //   playlistEl.innerHTML = '';
 //   songs.forEach((song, index) => {
@@ -292,7 +293,7 @@ function cleanSongName(filename) {
 //     playlistEl.appendChild(li);
 //   });
 // }
-
+ 
 function loadSong(index) {
   currentIndex = index;
   const song = songs[currentIndex];
@@ -300,40 +301,58 @@ function loadSong(index) {
   player.play();
   nowPlaying.textContent = `${song.name}`;
 }
-
+ 
 player.addEventListener('ended', () => {
   currentIndex = (currentIndex + 1) % songs.length;
   loadSong(currentIndex);
 });
+ 
+
+// --- SOURCE DROPDOWN ---
+const sourceDropdownToggle = document.getElementById('sourceDropdownToggle');
+const sourceDropdownPanel = document.getElementById('sourceDropdownPanel');
+
+sourceDropdownToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  sourceDropdownPanel.classList.toggle('open');
+});
+
+// close it when clicking anywhere outside
+document.addEventListener('click', (e) => {
+  if (!sourceDropdownPanel.contains(e.target) && e.target !== sourceDropdownToggle) {
+    sourceDropdownPanel.classList.remove('open');
+  }
+});
+
+setMode('youtube'); //Default mode is set to youtube on page load
 
 
 // --- BUTTON CONTROLS ---
-
 const allButtons = document.querySelectorAll('.Buttons button');
 const playBtn = document.getElementById('play');
 const pauseBtn = document.getElementById('pause');
 const nextBtn = document.getElementById('next');
 const prevBtn = document.getElementById('previous');
-
-// --- Click sound (plays instantly on press) ---
+ 
+// --- Click sound ---
 const clickSound = new Audio('Audio/Button_press1.mp3');
 clickSound.volume = 0.4;
-
+ 
 function playClickSound() {
   clickSound.currentTime = 0;
   clickSound.play();
 }
-
+ 
 allButtons.forEach(btn => {
   btn.addEventListener('pointerdown', playClickSound);
 });
-
+ 
 // --- Active state helper ---
 function setActiveButton(btn) {
-  allButtons.forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  allButtons.forEach(b => b.classList.remove('pressed'));
+  btn.classList.add('pressed');
 }
-
+ 
 // --- Play ---
 playBtn.addEventListener('click', () => {
   if (sourceMode === 'local') {
@@ -342,7 +361,7 @@ playBtn.addEventListener('click', () => {
     ytPlayer.playVideo();
   }
 });
-
+ 
 // --- Pause ---
 pauseBtn.addEventListener('click', () => {
   if (sourceMode === 'local') {
@@ -351,8 +370,8 @@ pauseBtn.addEventListener('click', () => {
     ytPlayer.pauseVideo();
   }
 });
-
-// --- Next (flashes active briefly, since it's a momentary action) ---
+ 
+// --- Next ---
 nextBtn.addEventListener('click', (e) => {
   if (sourceMode === 'local') {
     currentIndex = getNextIndex();
@@ -361,10 +380,11 @@ nextBtn.addEventListener('click', (e) => {
     ytPlayer.nextVideo();
   }
   setActiveButton(e.currentTarget);
-  setTimeout(() => e.currentTarget.classList.remove('active'), 200);
+  nextBtn.classList.toggle('pressed');
+  prevBtn.classList.remove('pressed');
 });
-
-// --- Previous (same momentary flash) ---
+ 
+// --- Previous ---
 prevBtn.addEventListener('click', (e) => {
   if (sourceMode === 'local') {
     currentIndex = getPrevIndex();
@@ -373,28 +393,29 @@ prevBtn.addEventListener('click', (e) => {
     ytPlayer.previousVideo();
   }
   setActiveButton(e.currentTarget);
-  setTimeout(() => e.currentTarget.classList.remove('active'), 200);
+  prevBtn.classList.toggle('pressed');
+  nextBtn.classList.remove('pressed');
 });
-
+ 
 player.addEventListener('ended', () => {
   currentIndex = getNextIndex();
   loadSong(currentIndex);
 });
-
+ 
 // SHUFFLER -----------------------------------------------------------------------
 const shuffleBtn = document.getElementById('shuffleBtn');
 let shuffleMode = false;
 let shuffledOrder = [];
-
+ 
 shuffleBtn.addEventListener('click', () => {
   shuffleMode = !shuffleMode;
   shuffleBtn.classList.toggle('active', shuffleMode);
-
+ 
   if (shuffleMode) {
     shuffledOrder = generateShuffledOrder();
   }
 });
-
+ 
 function generateShuffledOrder() {
   const indices = songs.map((_, i) => i).filter(i => i !== currentIndex);
   // Fisher-Yates shuffle
@@ -404,54 +425,54 @@ function generateShuffledOrder() {
   }
   return [currentIndex, ...indices]; // current song stays first, rest shuffled
 }
-
+ 
 function getNextIndex() {
   if (!shuffleMode) {
     return (currentIndex + 1) % songs.length;
   }
-
+ 
   const posInShuffle = shuffledOrder.indexOf(currentIndex);
   const nextPos = (posInShuffle + 1) % shuffledOrder.length;
-
+ 
   // reshuffle once we've looped through everything
   if (nextPos === 0) {
     shuffledOrder = generateShuffledOrder();
     return shuffledOrder[0];
   }
-
+ 
   return shuffledOrder[nextPos];
 }
-
+ 
 function getPrevIndex() {
   if (!shuffleMode) {
     return (currentIndex - 1 + songs.length) % songs.length;
   }
-
+ 
   const posInShuffle = shuffledOrder.indexOf(currentIndex);
   const prevPos = (posInShuffle - 1 + shuffledOrder.length) % shuffledOrder.length;
   return shuffledOrder[prevPos];
 }
-
+ 
 // SIDEBAR JS------------------------------------------------------------------------
-
+ 
 const playlistSidebar = document.getElementById('playlistSidebar');
 const playlistToggle = document.getElementById('playlistToggle');
 const closeSidebar = document.getElementById('closeSidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
-
+ 
 playlistToggle.addEventListener('click', () => {
   playlistSidebar.classList.add('open');
   sidebarOverlay.classList.add('visible');
 });
-
+ 
 function closeSidebarFn() {
   playlistSidebar.classList.remove('open');
   sidebarOverlay.classList.remove('visible');
 }
-
+ 
 closeSidebar.addEventListener('click', closeSidebarFn);
 sidebarOverlay.addEventListener('click', closeSidebarFn);
-
+ 
 // Updated renderPlaylist — adds "active" highlight + instant play on click
 function renderPlaylist() {
   playlistEl.innerHTML = '';
@@ -459,16 +480,16 @@ function renderPlaylist() {
     const li = document.createElement('li');
     li.textContent = song.name;
     if (index === currentIndex) li.classList.add('active');
-
+ 
     li.addEventListener('click', () => {
       loadSong(index);
       closeSidebarFn(); // optional — closes sidebar after picking a song
     });
-
+ 
     playlistEl.appendChild(li);
   });
 }
-
+ 
 // Updated loadSong — re-renders playlist so the active highlight follows the current song
 function loadSong(index) {
   currentIndex = index;
@@ -478,27 +499,27 @@ function loadSong(index) {
   nowPlaying.textContent = `${song.name}`;
   renderPlaylist(); // refresh so .active class updates to the new song
 }
-
-
-
+ 
+ 
+ 
 const volumeSlider = document.getElementById('volumeSlider');
 const volumeIcon = document.getElementById('volumeIcon');
-
+ 
 // Set initial volume to match the slider's starting value
 player.volume = volumeSlider.value / 100;
-
+ 
 volumeSlider.addEventListener('input', () => {
   const vol = volumeSlider.value / 100;
-
+ 
   if (sourceMode === 'local') {
     player.volume = vol;
   } else if (ytReady) {
     ytPlayer.setVolume(volumeSlider.value); // YouTube API uses 0–100, not 0–1
   }
-
+ 
   updateVolumeIcon(vol);
 });
-
+ 
 function updateVolumeIcon(vol) {
   if (vol === 0) {
     volumeIcon.textContent = '';
@@ -508,10 +529,10 @@ function updateVolumeIcon(vol) {
     volumeIcon.textContent = '';
   }
 }
-
+ 
 // Optional: click the icon to mute/unmute, remembering last volume
 let lastVolume = player.volume;
-
+ 
 volumeIcon.addEventListener('click', () => {
   if (player.volume > 0) {
     lastVolume = player.volume;
@@ -523,3 +544,41 @@ volumeIcon.addEventListener('click', () => {
   }
   updateVolumeIcon(player.volume);
 });
+
+// --- Keyboard Shortcuts ---
+document.addEventListener('keydown', (e) => {
+  // prevent page scroll on space/arrows
+  if ([' ', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+    e.preventDefault();
+  }
+
+  switch (e.key) {
+    case ' ':
+      sourceMode === 'local' ? (player.paused ? player.play() : player.pause()) : (ytReady && (ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo()));
+      playBtn.classList.toggle('pressed');
+      pauseBtn.classList.toggle('pressed');
+      clickSound.play();
+      break;
+    case 'ArrowRight':
+      nextBtn.click();
+      nextBtn.classList.toggle('pressed');      prevBtn.classList.remove('pressed');
+      playBtn.classList.add('pressed');      pauseBtn.classList.remove('pressed');
+      clickSound.play();
+      break;
+    case 'ArrowLeft':
+      prevBtn.click();
+      prevBtn.classList.toggle('pressed');      nextBtn.classList.remove('pressed');
+      playBtn.classList.add('pressed');      pauseBtn.classList.remove('pressed');
+      clickSound.play();
+      break;
+    case 'ArrowUp':
+      volumeSlider.value = Math.min(100, Number(volumeSlider.value) + 5);
+      volumeSlider.dispatchEvent(new Event('input')); // triggers your existing volume handler
+      break;
+    case 'ArrowDown':
+      volumeSlider.value = Math.max(0, Number(volumeSlider.value) - 5);
+      volumeSlider.dispatchEvent(new Event('input'));
+      break;
+  }
+});
+

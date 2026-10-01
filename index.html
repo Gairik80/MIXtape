@@ -43,9 +43,13 @@
 
     <input type="file" id="folderInput" webkitdirectory multiple hidden>
     
+<div class="source-dropdown">
+  <button id="sourceDropdownToggle" class="dropdown-toggle-btn"><i class="fa-solid fa-circle-chevron-right"></i></button>
+  <div id="sourceDropdownPanel" class="dropdown-panel">
+
     <div class="source-toggle">
-      <button id="modeLocal" class="mode-btn active"><i class="fa-solid fa-folder" style="scale:1.75;"></i></button>
-      <button id="modeYouTube" class="mode-btn"><i class="fa-brands fa-youtube" style="scale:1.75;"></i></button>
+      <button id="modeYouTube" class="mode-btn active"><i class="fa-brands fa-youtube" style="scale:1.75;"></i></button>
+      <button id="modeLocal" class="mode-btn"><i class="fa-solid fa-folder" style="scale:1.75;"></i></button>
       <!-- <button id="chooseFolderBtn">upload folder</button> -->
       
       <div id="sourceInputContainer">
@@ -60,6 +64,9 @@
         </div>
       </div>
     </div>
+    
+  </div>
+</div>
     <!-- Hidden YouTube player -->
     <div id="youtube-player"></div>
     
@@ -88,7 +95,7 @@
         <div class="Buttons">
           <button id="previous"><i class="fa-solid fa-backward"></i></button>
           <button id="play"><i class="fa-solid fa-play"></i></button>
-          <button id="pause"><i class="fa-solid fa-pause"></i></button>
+          <button id="pause" class="pressed"><i class="fa-solid fa-pause"></i></button>
           <button id="next"><i class="fa-solid fa-forward"></i></button>
         </div>
 

@@ -74,6 +74,7 @@ animateBackground();
 let sourceMode = 'youtube'; // 'local' or 'youtube'
 let ytPlayer = null;
 let ytReady = false;
+let isChangingSong = false;
 
 const modeLocalBtn = document.getElementById('modeLocal');
 const modeYouTubeBtn = document.getElementById('modeYouTube');
@@ -122,12 +123,14 @@ function onYTStateChange(event) {
   if (event.data === YT.PlayerState.PLAYING) {
     reels.forEach(r => r.style.animationPlayState = 'running');
     setActiveButton(playBtn);
+    
+    isChangingSong = false;
 
     const videoData = ytPlayer.getVideoData();
     nowPlaying.textContent = videoData.title;
     updateVinylLabel(videoData.video_id);
   }
-  else if (event.data === YT.PlayerState.PAUSED) {
+  else if (event.data === YT.PlayerState.PAUSED && !isChangingSong) {
     reels.forEach(r => r.style.animationPlayState = 'paused');
     setActiveButton(pauseBtn);
   }
@@ -145,8 +148,8 @@ function setMode(mode) {
   modeLocalBtn.classList.toggle('active', mode === 'local');
   modeYouTubeBtn.classList.toggle('active', mode === 'youtube');
 
-  player.pause();
-  if (ytPlayer && ytReady) ytPlayer.pauseVideo();
+  // player.pause();
+  // if (ytPlayer && ytReady) ytPlayer.pauseVideo();
 
   // Swap which input is visible
   chooseFolderBtn.classList.toggle('hidden', mode === 'youtube');
@@ -174,6 +177,8 @@ loadYtPlaylistBtn.addEventListener('click', () => {
     alert('Could not find a playlist ID in that link. Make sure it includes "?list=..."');
     return;
   }
+
+  player.pause();
 
   if (!ytPlayer) {
     loadYouTubeAPI(playlistId); // pass the ID through so it's ready once the API loads
@@ -203,8 +208,10 @@ folderInput.addEventListener('change', (e) => {
     return;
   }
 
-  // Release the previous folder's blob URLs before creating new ones,
-  // otherwise picking a folder more than once leaks memory for the session
+  if (ytPlayer && ytReady) {
+    ytPlayer.pauseVideo();
+  }
+  // Release the previous folder's blob URLs before creating new ones, otherwise picking a folder more than once leaks memory for the session
   songs.forEach(song => URL.revokeObjectURL(song.url));
 
   // Extract folder name from the first file's relative path
@@ -316,6 +323,7 @@ nextBtn.addEventListener('click', (e) => {
     currentIndex = getNextIndex();
     loadSong(currentIndex);
   } else if (ytReady) {
+    isChangingSong = true;
     ytPlayer.nextVideo();
   }
   flashPressed(e.currentTarget);
@@ -327,6 +335,7 @@ prevBtn.addEventListener('click', (e) => {
     currentIndex = getPrevIndex();
     loadSong(currentIndex);
   } else if (ytReady) {
+    isChangingSong = true;
     ytPlayer.previousVideo();
   }
   flashPressed(e.currentTarget);

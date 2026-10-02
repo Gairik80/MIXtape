@@ -22,6 +22,7 @@ body{
     background: linear-gradient(90deg, #d30c0c, #ff6d00); 
     background-size: 110%;
     background-position: center;    background-repeat: no-repeat;    background-position: fixed;
+    /* cursor: url(Images/mouse.svg), auto; */
 
     margin: 0px;
     min-height: 100vh;
